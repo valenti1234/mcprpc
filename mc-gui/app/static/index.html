@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>mcprpc GUI</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="title">mcprpc GUI</div>
+      <div class="subtitle" id="cfg"></div>
+      <div class="tabs">
+        <button class="tab active" data-tab="registry">Registry</button>
+        <button class="tab" data-tab="router">Router</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="panel" id="panel-registry">
+        <div class="row">
+          <button id="reg-refresh">Refresh</button>
+          <button id="reg-health">Health</button>
+          <button id="reg-ready">Ready</button>
+          <button id="reg-stats">Stats</button>
+          <button id="reg-heartbeats">Heartbeats</button>
+        </div>
+
+        <div class="row">
+          <label class="field">
+            <span>Tag</span>
+            <input id="reg-filter-tag" placeholder="es: math" />
+          </label>
+          <label class="field">
+            <span>Runtime</span>
+            <input id="reg-filter-runtime" placeholder="es: python" />
+          </label>
+          <label class="field grow">
+            <span>Search</span>
+            <input id="reg-search" placeholder="nome / service / mesh / endpoint" />
+          </label>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table" id="reg-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Service</th>
+                <th>Mesh</th>
+                <th>Runtime</th>
+                <th>MCP</th>
+                <th>Endpoint</th>
+                <th>Health</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="split">
+          <section class="card">
+            <div class="card-title">Register / Update</div>
+            <form id="reg-form" class="form">
+              <div class="row">
+                <label class="field grow">
+                  <span>Name</span>
+                  <input id="f-name" required placeholder="es: math.sum" />
+                </label>
+                <label class="field">
+                  <span>Runtime</span>
+                  <input id="f-runtime" required placeholder="python | node | ..." />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>Service Name</span>
+                  <input id="f-service" required placeholder="es: math-service" />
+                </label>
+                <label class="field">
+                  <span>Mesh ID</span>
+                  <input id="f-mesh" required placeholder="es: mesh-1" />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field">
+                  <span>MCP Transport</span>
+                  <select id="f-mcp-transport" required>
+                    <option value="stdio">stdio</option>
+                    <option value="sse">sse</option>
+                    <option value="streamable-http">streamable-http</option>
+                  </select>
+                </label>
+                <label class="field grow">
+                  <span>Endpoint</span>
+                  <input id="f-endpoint" required placeholder='es: "python worker.py" oppure "http://localhost:7002/mcp"' />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>Description</span>
+                  <input id="f-description" placeholder="opzionale" />
+                </label>
+                <label class="field">
+                  <span>Health</span>
+                  <input id="f-health" placeholder="healthy | unknown | ..." />
+                </label>
+                <label class="field">
+                  <span>Version</span>
+                  <input id="f-version" placeholder="0.1.0" />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>Tags (comma separated)</span>
+                  <input id="f-tags" placeholder="es: math, demo" />
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>ACL (JSON)</span>
+                  <textarea id="f-acl" rows="3" placeholder='es: {"roles":["admin"]}'></textarea>
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>Input Schema (JSON)</span>
+                  <textarea id="f-input" rows="3"></textarea>
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>Output Schema (JSON)</span>
+                  <textarea id="f-output" rows="3"></textarea>
+                </label>
+              </div>
+              <div class="row">
+                <label class="field grow">
+                  <span>Cost (JSON)</span>
+                  <textarea id="f-cost" rows="2"></textarea>
+                </label>
+              </div>
+              <div class="row">
+                <button type="submit">Register</button>
+                <button type="button" id="reg-form-clear">Clear</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="card">
+            <div class="card-title">Output</div>
+            <pre class="output" id="output"></pre>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel hidden" id="panel-router">
+        <div class="row">
+          <button id="rt-health">Health</button>
+          <button id="rt-ready">Ready</button>
+          <button id="rt-stats">Stats</button>
+        </div>
+
+        <section class="card">
+          <div class="card-title">Test Call</div>
+          <form id="call-form" class="form">
+            <div class="row">
+              <label class="field grow">
+                <span>Function</span>
+                <input id="c-function" required placeholder="es: math.sum" />
+              </label>
+              <label class="field">
+                <span>Tenant</span>
+                <input id="c-tenant" placeholder="opzionale" />
+              </label>
+            </div>
+            <div class="row">
+              <label class="field grow">
+                <span>Roles (comma separated)</span>
+                <input id="c-roles" placeholder="es: admin, user" />
+              </label>
+            </div>
+            <div class="row">
+              <label class="field grow">
+                <span>Arguments (JSON)</span>
+                <textarea id="c-args" rows="6" placeholder='es: {"a":1,"b":2}'></textarea>
+              </label>
+            </div>
+            <div class="row">
+              <button type="submit">Call</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="card">
+          <div class="card-title">Output</div>
+          <pre class="output" id="router-output"></pre>
+        </section>
+      </section>
+    </main>
+
+    <script src="/assets/app.js"></script>
+  </body>
+</html>

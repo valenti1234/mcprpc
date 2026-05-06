@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MCP Router Web Client (streamable-http)</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="header__title">
+        <div class="title">MCP Router Web Client</div>
+        <div class="subtitle">Pure frontend demo using fetch streaming (streamable-http)</div>
+      </div>
+      <div class="header__controls">
+        <label class="field field--inline">
+          <span>Registry URL</span>
+          <input id="registryBase" value="" placeholder="http://localhost:7000" autocomplete="off" />
+        </label>
+        <label class="field field--inline">
+          <span>Router URL</span>
+          <input id="routerBase" value="" placeholder="http://localhost:7010" autocomplete="off" />
+        </label>
+        <div class="status" id="statusPill" aria-live="polite">Idle</div>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel panel--left" aria-label="Tools">
+        <div class="panel__header">
+          <div>
+            <div class="panel__title">Connected tools</div>
+            <div class="panel__meta" id="toolsMeta">Not loaded</div>
+          </div>
+          <button id="refreshTools" type="button">Refresh</button>
+        </div>
+
+        <div class="tools">
+          <div class="tools__empty" id="toolsEmpty">No tools yet. Click Refresh.</div>
+          <ul class="tools__list" id="toolsList" role="list"></ul>
+        </div>
+      </aside>
+
+      <section class="panel panel--center" aria-label="Tool invocation">
+        <div class="panel__header">
+          <div>
+            <div class="panel__title">Tool invocation</div>
+            <div class="panel__meta" id="selectedToolMeta">Select a tool on the left</div>
+          </div>
+          <div class="row row--tight">
+            <button id="clearOutput" type="button" class="button button--ghost">Clear output</button>
+            <button id="clearLogs" type="button" class="button button--ghost">Clear logs</button>
+          </div>
+        </div>
+
+        <form id="toolForm" class="form" autocomplete="off">
+          <div class="form__empty" id="formEmpty">
+            Pick a tool to generate its input form.
+          </div>
+          <div id="formFields" class="form__fields" hidden></div>
+          <div id="contextFields" class="form__fields" hidden>
+            <label class="field">
+              <span>Roles (comma separated)</span>
+              <input id="ctxRoles" type="text" placeholder="e.g. admin, user" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span>Tenant (optional)</span>
+              <input id="ctxTenant" type="text" placeholder="e.g. demo" autocomplete="off" />
+            </label>
+          </div>
+          <div class="form__actions" id="formActions" hidden>
+            <button id="executeTool" type="submit">Execute</button>
+            <button id="cancelStream" type="button" class="button button--danger" disabled>Cancel</button>
+          </div>
+        </form>
+
+        <details class="help">
+          <summary>How this connects to an MCP Router (mcprpc)</summary>
+          <div class="help__body">
+            <p>
+              This frontend is designed to connect directly to a registry + router setup:
+              <code>GET {REGISTRY_URL}/functions</code> to discover tools and
+              <code>POST {ROUTER_URL}/call</code> to invoke a tool. The call response is read as a
+              streamed HTTP body, so any server using chunked transfer (including streamable-http)
+              can be displayed incrementally via <code>response.body.getReader()</code>.
+            </p>
+            <p>
+              In mcprpc terms, the registry provides the function catalog (including JSON Schemas),
+              and the router resolves and executes the selected function over MCP transports
+              (stdio or streamable-http). To satisfy ACLs, you may need to provide roles/tenant
+              in the context fields.
+            </p>
+          </div>
+        </details>
+      </section>
+
+      <aside class="panel panel--right" aria-label="Streaming output and logs">
+        <div class="split">
+          <section class="card">
+            <div class="card__header">
+              <div class="card__title">Live output</div>
+              <div class="card__meta" id="streamMeta">Waiting</div>
+            </div>
+            <pre id="streamOutput" class="console" aria-label="Stream output"></pre>
+          </section>
+
+          <section class="card">
+            <div class="card__header">
+              <div class="card__title">Logs</div>
+              <div class="card__meta" id="logMeta">0 entries</div>
+            </div>
+            <pre id="logOutput" class="console console--logs" aria-label="Logs"></pre>
+          </section>
+        </div>
+      </aside>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

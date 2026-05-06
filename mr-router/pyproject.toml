@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcprpc-router"
+version = "0.1.0"
+description = "MCP RPC Router"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "mcprpc contributors" }]
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.29.0",
+    "pydantic>=2.0.0",
+    "httpx>=0.27.0",
+    "mcp>=1.0.0"
+]
+keywords = ["mcp", "mcprpc", "router", "streaming"]
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+[project.urls]
+Homepage = "https://github.com/valenti/mcprpc"
+Repository = "https://github.com/valenti/mcprpc"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-asyncio",
+    "httpx"
+]
+
+[project.scripts]
+mcprpc-router = "app.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]

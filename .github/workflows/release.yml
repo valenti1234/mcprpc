@@ -1,0 +1,127 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "mr-registry-v*"
+      - "mr-router-v*"
+      - "mc-gui-v*"
+      - "mc-automesh-v*"
+      - "mcprpc-v*"
+
+jobs:
+  publish-python:
+    name: Publish to PyPI
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, 'mr-registry-v') || startsWith(github.ref_name, 'mr-router-v') || startsWith(github.ref_name, 'mc-gui-v') || startsWith(github.ref_name, 'mc-automesh-v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Select package
+        id: pkg
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          case "$tag" in
+            mr-registry-v*) echo "dir=mr-registry" >> "$GITHUB_OUTPUT" ;;
+            mr-router-v*) echo "dir=mr-router" >> "$GITHUB_OUTPUT" ;;
+            mc-gui-v*) echo "dir=mc-gui" >> "$GITHUB_OUTPUT" ;;
+            mc-automesh-v*) echo "dir=mc-automesh" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "Unsupported tag: $tag" >&2
+              exit 2
+              ;;
+          esac
+          echo "version=${tag#*-v}" >> "$GITHUB_OUTPUT"
+
+      - name: Install build tooling
+        run: |
+          python -m pip install -U pip
+          python -m pip install -U build twine
+
+      - name: Verify tag matches pyproject version
+        shell: bash
+        run: |
+          set -euo pipefail
+          dir="${{ steps.pkg.outputs.dir }}"
+          tag_version="${{ steps.pkg.outputs.version }}"
+          py_version="$(python - <<'PY'
+import pathlib
+import tomllib
+data = tomllib.loads(pathlib.Path("pyproject.toml").read_text(encoding="utf-8"))
+print(data["project"]["version"])
+PY
+)"
+          if [[ "$py_version" != "$tag_version" ]]; then
+            echo "Tag version ($tag_version) does not match pyproject.toml version ($py_version) in ${dir}" >&2
+            exit 1
+          fi
+        working-directory: ${{ steps.pkg.outputs.dir }}
+
+      - name: Build distributions
+        run: |
+          python -m build
+        working-directory: ${{ steps.pkg.outputs.dir }}
+
+      - name: Twine check
+        run: |
+          python -m twine check dist/*
+        working-directory: ${{ steps.pkg.outputs.dir }}
+
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          python -m twine upload dist/*
+        working-directory: ${{ steps.pkg.outputs.dir }}
+
+  publish-npm:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref_name, 'mcprpc-v')
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+          cache-dependency-path: mc-node-automesh/package-lock.json
+
+      - name: Install
+        run: |
+          cd mc-node-automesh
+          npm ci
+
+      - name: Verify tag matches package.json version
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          tag_version="${tag#mcprpc-v}"
+          pkg_version="$(node -p "require('./package.json').version")"
+          if [[ "$pkg_version" != "$tag_version" ]]; then
+            echo "Tag version ($tag_version) does not match package.json version ($pkg_version)" >&2
+            exit 1
+          fi
+        working-directory: mc-node-automesh
+
+      - name: Build
+        run: |
+          cd mc-node-automesh
+          npm run build
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cd mc-node-automesh
+          npm publish
+
