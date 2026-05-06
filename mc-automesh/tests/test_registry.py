@@ -21,6 +21,7 @@ def test_publish_to_registry_success():
     result = publish_to_registry(
         registry_url="http://localhost:7000",
         service_name="test-service",
+        mesh_id="test-mesh",
         runtime="python",
         mcp_transport="stdio",
         endpoint="python -c 'print(1)'",
@@ -51,6 +52,7 @@ def test_publish_to_registry_failure():
     result = publish_to_registry(
         registry_url="http://localhost:7000",
         service_name="test-service",
+        mesh_id="test-mesh",
         runtime="python",
         mcp_transport="stdio",
         endpoint="python -c 'print(1)'",
