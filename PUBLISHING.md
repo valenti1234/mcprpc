@@ -10,15 +10,9 @@ This repo includes a tag-driven release workflow:
 
 ### Required secrets
 
-No repository secrets are required if you use PyPI Trusted Publishing (OIDC).
+Configure this repository secret:
 
-Configure Trusted Publishing in PyPI for each project you want to publish:
-
-- PyPI project → Publishing → Add a trusted publisher
-- Select GitHub as the provider
-- Repository: your org/user + repo name
-- Workflow file: `.github/workflows/release.yml`
-- Environment: optional (use if you want an approval gate)
+- `PYPI_API_TOKEN` (PyPI token with upload permissions; can be account-wide)
 
 ### Tag formats
 
