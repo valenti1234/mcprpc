@@ -1,8 +1,5 @@
 # mcprpc (monorepo)
 
-[![CI](https://github.com/valenti1234/mcprpc/actions/workflows/ci.yml/badge.svg)](https://github.com/valenti1234/mcprpc/actions/workflows/ci.yml)
-[![Release](https://github.com/valenti1234/mcprpc/actions/workflows/release.yml/badge.svg)](https://github.com/valenti1234/mcprpc/actions/workflows/release.yml)
-
 mcprpc is a small set of services and SDKs to register, discover, and invoke MCP (Model Context Protocol) tools across runtimes.
 
 This repository contains:
