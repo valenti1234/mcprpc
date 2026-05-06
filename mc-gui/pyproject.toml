@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcprpc-gui"
-version = "0.1.3"
+version = "0.1.4"
 description = "Web UI for mcprpc registry and router"
 readme = "README.md"
 license = { text = "MIT" }

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mc-automesh"
-version = "0.1.3"
+version = "0.1.4"
 description = "Automatically expose existing Python functions as MCP tools and publish them into mcprpc-registry without manual wrappers."
 readme = "README.md"
 requires-python = ">=3.10"
