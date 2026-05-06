@@ -1,6 +1,6 @@
 {
   "name": "mcprpc",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "AutoMesh for Node.js - automatically expose Node.js functions as MCP tools",
   "license": "MIT",
   "repository": {
