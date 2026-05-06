@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     tags:
+      - "v*"
       - "mr-registry-v*"
       - "mr-router-v*"
       - "mc-gui-v*"
