@@ -64,13 +64,7 @@ jobs:
           set -euo pipefail
           dir="${{ steps.pkg.outputs.dir }}"
           tag_version="${{ steps.pkg.outputs.version }}"
-          py_version="$(python - <<'PY'
-import pathlib
-import tomllib
-data = tomllib.loads(pathlib.Path("pyproject.toml").read_text(encoding="utf-8"))
-print(data["project"]["version"])
-PY
-)"
+          py_version="$(python -c "import pathlib, tomllib; data=tomllib.loads(pathlib.Path('pyproject.toml').read_text(encoding='utf-8')); print(data['project']['version'])")"
           if [[ "$py_version" != "$tag_version" ]]; then
             echo "Tag version ($tag_version) does not match pyproject.toml version ($py_version) in ${dir}" >&2
             exit 1
