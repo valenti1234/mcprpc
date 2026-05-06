@@ -7,14 +7,12 @@ This repository is a monorepo. Each package is released independently.
 This repo includes a tag-driven release workflow:
 
 - Python packages publish to PyPI
-- Node package publishes to npm
 
 ### Required secrets
 
 Configure these repository secrets:
 
 - `PYPI_API_TOKEN` (PyPI token with upload permissions)
-- `NPM_TOKEN` (npm token with publish permissions)
 
 ### Tag formats
 
@@ -24,7 +22,6 @@ The workflow triggers on these tags and verifies that the tag version matches th
 - `mr-router-vX.Y.Z` → publishes `mr-router/` to PyPI
 - `mc-gui-vX.Y.Z` → publishes `mc-gui/` to PyPI
 - `mc-automesh-vX.Y.Z` → publishes `mc-automesh/` to PyPI
-- `mcprpc-vX.Y.Z` → publishes `mc-node-automesh/` to npm
 
 ## Python (PyPI)
 
