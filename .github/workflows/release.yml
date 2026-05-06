@@ -29,18 +29,30 @@ jobs:
         run: |
           set -euo pipefail
           tag="${GITHUB_REF_NAME}"
+
           case "$tag" in
-            mr-registry-v*) echo "dir=mr-registry" >> "$GITHUB_OUTPUT" ;;
-            mr-router-v*) echo "dir=mr-router" >> "$GITHUB_OUTPUT" ;;
-            mc-gui-v*) echo "dir=mc-gui" >> "$GITHUB_OUTPUT" ;;
-            mc-automesh-v*) echo "dir=mc-automesh" >> "$GITHUB_OUTPUT" ;;
+            mr-registry-v*)
+              echo "dir=mr-registry" >> "$GITHUB_OUTPUT"
+              echo "version=${tag#mr-registry-v}" >> "$GITHUB_OUTPUT"
+              ;;
+            mr-router-v*)
+              echo "dir=mr-router" >> "$GITHUB_OUTPUT"
+              echo "version=${tag#mr-router-v}" >> "$GITHUB_OUTPUT"
+              ;;
+            mc-gui-v*)
+              echo "dir=mc-gui" >> "$GITHUB_OUTPUT"
+              echo "version=${tag#mc-gui-v}" >> "$GITHUB_OUTPUT"
+              ;;
+            mc-automesh-v*)
+              echo "dir=mc-automesh" >> "$GITHUB_OUTPUT"
+              echo "version=${tag#mc-automesh-v}" >> "$GITHUB_OUTPUT"
+              ;;
             *)
               echo "Unsupported tag: $tag" >&2
               exit 2
               ;;
           esac
-          echo "version=${tag#*-v}" >> "$GITHUB_OUTPUT"
-
+  
       - name: Install build tooling
         run: |
           python -m pip install -U pip
