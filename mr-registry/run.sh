@@ -13,7 +13,7 @@ fi
 python -m pip install -U pip >/dev/null
 pip install -e ".[dev]" >/dev/null
 
-HOST="${HOST:-127.0.0.1}"
+HOST="${HOST:-0.0.0.0}"
 PORT="${PORT:-7000}"
 LOG_LEVEL="${LOG_LEVEL:-info}"
 MCPRPC_LOG_INVALID_HTTP="${MCPRPC_LOG_INVALID_HTTP:-0}"

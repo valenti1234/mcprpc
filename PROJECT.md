@@ -13,7 +13,7 @@ The repo is a monorepo with these primary projects:
 
 - `mc-automesh/` — Python AutoMesh (discover + publish + serve MCP tools)
 - `mc-node-automesh/` — Node.js/TypeScript AutoMesh (discover + publish + serve MCP tools)
-- `mc-java-automesh/` — Java 21 AutoMesh (discover + publish + serve MCP tools over `stdio`, `sse`, `streamable-http`)
+- `mc-java-automesh/` — Java AutoMesh (discover + publish + serve MCP tools over `stdio`, `sse`, `streamable-http`)
 - `mr-registry/` — Function registry service (FastAPI + SQLite via SQLModel)
 - `mr-router/` — Router service (FastAPI) that resolves and calls tools via MCP
 - `mc-gui/` — Web UI + proxy (FastAPI + static assets)
@@ -106,7 +106,7 @@ Notable files:
 - `mc-node-automesh/src/mcp-server.ts` — MCP server wrapper around the official SDK
 - `mc-node-automesh/src/cli.ts` — CLI
 
-### mc-java-automesh (Java 21 AutoMesh)
+### mc-java-automesh (Java AutoMesh)
 
 Purpose: discover Java methods, register them in the registry, and expose them as MCP tools over `stdio` or HTTP transports.
 

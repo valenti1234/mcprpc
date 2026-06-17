@@ -13,7 +13,7 @@ fi
 python -m pip install -U pip >/dev/null
 pip install -e ".[test]" >/dev/null
 
-HOST="${HOST:-127.0.0.1}"
+HOST="${HOST:-0.0.0.0}"
 PORT="${PORT:-7010}"
 export REGISTRY_URL="${REGISTRY_URL:-http://127.0.0.1:7000}"
 export MCPRPC_STDIO_PERSISTENT="${MCPRPC_STDIO_PERSISTENT:-1}"

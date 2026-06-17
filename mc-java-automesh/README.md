@@ -1,10 +1,10 @@
 # mc-java-automesh
 
-`mc-java-automesh` is a Java 21 AutoMesh implementation for the `mcprpc` monorepo. It discovers Java methods, exposes them as MCP tools over stdio or HTTP transports, and publishes metadata to the `mr-registry` service.
+`mc-java-automesh` is a Java AutoMesh implementation for the `mcprpc` monorepo. It discovers Java methods, exposes them as MCP tools over stdio or HTTP transports, and publishes metadata to the `mr-registry` service.
 
 ## Features
 
-- Java 21 library with Maven build
+- Java 17+ library with Maven build
 - Reflection-based discovery for instance or static methods
 - `@Expose` and `@Ignore` annotations for metadata control
 - JSON Schema generation from Java method signatures
@@ -14,6 +14,11 @@
 - Built-in `system.health` and `system.heartbeat` tools
 
 ## Quickstart
+
+Prereqs:
+
+- Java 17+ (JDK recommended)
+- Maven (`mvn`)
 
 ```java
 import io.mcprpc.automesh.AutoMesh;

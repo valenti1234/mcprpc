@@ -6,7 +6,7 @@ import os
 import httpx
 from collections import Counter, deque
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from threading import Lock
 
@@ -32,12 +32,17 @@ app = FastAPI(title="MCP RPC Router", lifespan=lifespan)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
 
+_cors_any_origin = True
 _cors_origins_raw = os.getenv("MCPRPC_CORS_ORIGINS", "").strip()
 _cors_origin_regex = os.getenv(
     "MCPRPC_CORS_ALLOW_ORIGIN_REGEX",
-    r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})(:\d+)?$",
 ).strip()
 _cors_origins = [o.strip() for o in _cors_origins_raw.split(",") if o.strip()]
+
+if _cors_any_origin:
+    _cors_origins = ["*"]
+    _cors_origin_regex = None
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,6 +52,27 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def _cors_any_origin_preflight(request: Request, call_next):
+    if request.method.upper() != "OPTIONS":
+        return await call_next(request)
+
+    origin = request.headers.get("origin") or "*"
+    request_method = request.headers.get("access-control-request-method") or "*"
+    request_headers = request.headers.get("access-control-request-headers") or "*"
+
+    allow_origin = "*" if origin == "null" else origin
+    allow_methods = request_method if request_method != "*" else "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+
+    headers = {
+        "Access-Control-Allow-Origin": allow_origin,
+        "Access-Control-Allow-Methods": allow_methods,
+        "Access-Control-Allow-Headers": request_headers,
+        "Access-Control-Max-Age": "86400",
+        "Vary": "Origin, Access-Control-Request-Method, Access-Control-Request-Headers",
+    }
+    return Response(status_code=204, headers=headers)
 
 START_TS = time.time()
 STATS_LOCK = Lock()

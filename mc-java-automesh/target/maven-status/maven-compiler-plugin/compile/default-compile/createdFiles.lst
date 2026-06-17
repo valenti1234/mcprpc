@@ -9,11 +9,11 @@ io/mcprpc/automesh/annotations/Expose.class
 io/mcprpc/automesh/examples/BillingApi$Invoice.class
 io/mcprpc/automesh/HttpMcpServer$Session.class
 io/mcprpc/automesh/HttpMcpServer.class
-io/mcprpc/automesh/examples/BillingApi.class
 io/mcprpc/automesh/AutoMesh$Builder.class
+io/mcprpc/automesh/examples/BillingApi.class
 io/mcprpc/automesh/HttpMcpServer$RootHandler.class
-io/mcprpc/automesh/AutoMesh.class
 io/mcprpc/automesh/annotations/InputMode.class
+io/mcprpc/automesh/AutoMesh.class
 io/mcprpc/automesh/SchemaUtils.class
 io/mcprpc/automesh/RegistryClient.class
 io/mcprpc/automesh/ToolMetadata.class

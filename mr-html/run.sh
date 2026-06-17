@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 PORT="${PORT:-8386}"
-HOST="${HOST:-127.0.0.1}"
+HOST="${HOST:-0.0.0.0}"
 
 print_usage() {
   cat <<'USAGE'
@@ -51,7 +51,11 @@ if command -v ss >/dev/null 2>&1; then
   fi
 fi
 
-URL="http://${HOST}:${PORT}/"
-echo "Serving mr-html at ${URL}"
-exec python3 -m http.server "${PORT}" --bind "${HOST}"
+OPEN_HOST="${HOST}"
+if [[ "${OPEN_HOST}" == "0.0.0.0" || "${OPEN_HOST}" == "::" || "${OPEN_HOST}" == "[::]" ]]; then
+  OPEN_HOST="127.0.0.1"
+fi
 
+echo "Serving mr-html (bind=${HOST}:${PORT})"
+echo "Open: http://${OPEN_HOST}:${PORT}/"
+exec python3 -m http.server "${PORT}" --bind "${HOST}"

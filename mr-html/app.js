@@ -155,8 +155,29 @@ class MCPClient {
       return await fetch(url, mergedInit);
     } catch (err) {
       if (err instanceof TypeError && (err.message || "").toLowerCase().includes("failed to fetch")) {
+        const hints = [];
+        try {
+          const u = new URL(url, window.location.href);
+          if (isNonRoutableBrowserHost(u.hostname)) {
+            hints.push(
+              `Use http://127.0.0.1:${u.port || "(port)"} instead of ${u.hostname} (0.0.0.0/:: are bind addresses, not client addresses).`,
+            );
+          }
+          const pageHost = window.location.hostname || "localhost";
+          const isLocalhostFamily =
+            (x) => x === "localhost" || x === "127.0.0.1" || x === "::1";
+          if (isLocalhostFamily(u.hostname) && isLocalhostFamily(pageHost) && u.hostname !== pageHost) {
+            hints.push(`Align hostnames: page is ${pageHost} but request is ${u.hostname}.`);
+          }
+          if (u.protocol === "https:" && window.location.protocol === "http:") {
+            hints.push("If the backend is plain HTTP, use http://... not https://...");
+          }
+          hints.push(`Check the service is up: try opening ${u.origin}/health in a new tab.`);
+        } catch {
+          // ignore URL parsing errors
+        }
         throw new Error(
-          "Connection error: Failed to fetch (service down, mixed hostnames like localhost vs 127.0.0.1, or CORS blocked).",
+          `Connection error: Failed to fetch ${url} (service down, bad host like 0.0.0.0, mixed hostnames, or CORS).${hints.length ? ` Hints: ${hints.join(" ")}` : ""}`,
         );
       }
       if (controller.signal.aborted) {
@@ -553,9 +574,21 @@ function getEl(id) {
   return el;
 }
 
+function isNonRoutableBrowserHost(hostname) {
+  const h = String(hostname || "").trim().toLowerCase();
+  return h === "0.0.0.0" || h === "::" || h === "[::]" || h === "0:0:0:0:0:0:0:0";
+}
+
+function normalizeBaseUrl(raw) {
+  const trimmed = String(raw || "").trim().replace(/\/+$/, "");
+  if (!trimmed) return "";
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) return trimmed;
+  if (/^[a-z0-9.-]+:\d+$/i.test(trimmed)) return `http://${trimmed}`;
+  return trimmed;
+}
+
 function readBaseUrlInput(inputEl) {
-  const raw = String(inputEl.value || "").trim();
-  return raw.replace(/\/+$/, "");
+  return normalizeBaseUrl(inputEl.value);
 }
 
 function parseCommaList(value) {
@@ -609,7 +642,8 @@ async function main() {
   const storedRegistryBase = localStorage.getItem("mcp.registryBase") || "";
   const storedRouterBase = localStorage.getItem("mcp.routerBase") || "";
 
-  const host = window.location.hostname || "localhost";
+  const rawHost = window.location.hostname || "localhost";
+  const host = isNonRoutableBrowserHost(rawHost) ? "127.0.0.1" : rawHost;
   const defaultRegistryBase = `http://${host}:7000`;
   const defaultRouterBase = `http://${host}:7010`;
 
@@ -618,6 +652,9 @@ async function main() {
     if (!s) return "";
     try {
       const u = new URL(s);
+      if (isNonRoutableBrowserHost(u.hostname)) {
+        return defaultBase;
+      }
       if (u.hostname === "localhost" && currentHost !== "localhost") {
         return defaultBase;
       }
@@ -633,8 +670,10 @@ async function main() {
   const normalizedStoredRegistryBase = normalizeStoredBase(storedRegistryBase, defaultRegistryBase, host);
   const normalizedStoredRouterBase = normalizeStoredBase(storedRouterBase, defaultRouterBase, host);
 
-  elements.registryBase.value = normalizedStoredRegistryBase || elements.registryBase.value || defaultRegistryBase;
-  elements.routerBase.value = normalizedStoredRouterBase || elements.routerBase.value || defaultRouterBase;
+  elements.registryBase.value =
+    normalizeBaseUrl(normalizedStoredRegistryBase) || normalizeBaseUrl(elements.registryBase.value) || defaultRegistryBase;
+  elements.routerBase.value =
+    normalizeBaseUrl(normalizedStoredRouterBase) || normalizeBaseUrl(elements.routerBase.value) || defaultRouterBase;
 
   localStorage.setItem("mcp.registryBase", readBaseUrlInput(elements.registryBase));
   localStorage.setItem("mcp.routerBase", readBaseUrlInput(elements.routerBase));

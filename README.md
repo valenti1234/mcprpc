@@ -8,7 +8,7 @@ This repository contains:
 - `mr-router`: MCP router service (HTTP) that resolves tools via the registry and invokes MCP endpoints
 - `mc-automesh`: Python AutoMesh (publish Python functions as MCP tools + register them)
 - `mc-node-automesh`: Node.js/TypeScript AutoMesh (publish Node functions as MCP tools + register them)
-- `mc-java-automesh`: Java 21 AutoMesh (publish Java methods as MCP tools + register them)
+- `mc-java-automesh`: Java AutoMesh (publish Java methods as MCP tools + register them)
 - `mc-gui`: Web UI that proxies registry/router APIs
 - `mr-html`: pure-frontend demo UI (no backend code) that talks to registry + router directly
 

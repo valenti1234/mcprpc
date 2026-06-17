@@ -105,7 +105,7 @@ app = FastAPI(
 _cors_origins_raw = os.getenv("MCPRPC_CORS_ORIGINS", "").strip()
 _cors_origin_regex = os.getenv(
     "MCPRPC_CORS_ALLOW_ORIGIN_REGEX",
-    r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
+    r"^https?://(localhost|127\.0\.0\.1|\[::1\]|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[0-1])\.\d{1,3}\.\d{1,3})(:\d+)?$",
 ).strip()
 _cors_origins = [o.strip() for o in _cors_origins_raw.split(",") if o.strip()]
 
