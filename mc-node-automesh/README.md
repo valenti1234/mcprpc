@@ -51,7 +51,7 @@ import { AutoMesh } from "mcprpc";
 async function main() {
   const mesh = new AutoMesh({
     serviceName: "node-billing-worker",
-    registryUrl: "http://localhost:7000",
+    registryUrl: "http://127.0.0.1:7000",
     runtime: "node",
     mcpTransport: "stdio",
     endpoint: "node dist/examples/billing-worker.js"
@@ -93,7 +93,7 @@ Because runtime type inference in Node.js (especially for TypeScript) can be dif
 
 ## Running with Registry and Router
 
-1. Ensure the `mcprpc-registry` is running on `http://localhost:7000`.
+1. Ensure the `mcprpc-registry` is running on `http://127.0.0.1:7000`.
 2. Start your worker (`tsx billing-worker.ts` or `node dist/billing-worker.js`).
 3. AutoMesh will register tools to the registry and start listening via `stdio`.
 4. Connect via an MCP client or the `mcprpc-router`.
@@ -130,8 +130,8 @@ The payload sent to the registry is:
 This package exposes a CLI:
 
 ```bash
-mcprpc run --service-name node-billing-worker --registry-url http://localhost:7000 --module ./examples/services/billing.ts
-mcprpc publish-module --service-name node-billing-worker --registry-url http://localhost:7000 --module ./examples/services/billing.ts
-mcprpc serve --service-name node-billing-worker --registry-url http://localhost:7000
-mcprpc heartbeat --service-name node-billing-worker --registry-url http://localhost:7000
+mcprpc run --service-name node-billing-worker --registry-url http://127.0.0.1:7000 --module ./examples/services/billing.ts
+mcprpc publish-module --service-name node-billing-worker --registry-url http://127.0.0.1:7000 --module ./examples/services/billing.ts
+mcprpc serve --service-name node-billing-worker --registry-url http://127.0.0.1:7000
+mcprpc heartbeat --service-name node-billing-worker --registry-url http://127.0.0.1:7000
 ```

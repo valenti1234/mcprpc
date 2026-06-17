@@ -613,8 +613,28 @@ async function main() {
   const defaultRegistryBase = `http://${host}:7000`;
   const defaultRouterBase = `http://${host}:7010`;
 
-  elements.registryBase.value = storedRegistryBase || elements.registryBase.value || defaultRegistryBase;
-  elements.routerBase.value = storedRouterBase || elements.routerBase.value || defaultRouterBase;
+  const normalizeStoredBase = (stored, defaultBase, currentHost) => {
+    const s = String(stored || "").trim();
+    if (!s) return "";
+    try {
+      const u = new URL(s);
+      if (u.hostname === "localhost" && currentHost !== "localhost") {
+        return defaultBase;
+      }
+      if (u.hostname === "127.0.0.1" && currentHost === "localhost") {
+        return defaultBase;
+      }
+      return s;
+    } catch {
+      return s;
+    }
+  };
+
+  const normalizedStoredRegistryBase = normalizeStoredBase(storedRegistryBase, defaultRegistryBase, host);
+  const normalizedStoredRouterBase = normalizeStoredBase(storedRouterBase, defaultRouterBase, host);
+
+  elements.registryBase.value = normalizedStoredRegistryBase || elements.registryBase.value || defaultRegistryBase;
+  elements.routerBase.value = normalizedStoredRouterBase || elements.routerBase.value || defaultRouterBase;
 
   localStorage.setItem("mcp.registryBase", readBaseUrlInput(elements.registryBase));
   localStorage.setItem("mcp.routerBase", readBaseUrlInput(elements.routerBase));
@@ -708,7 +728,10 @@ async function main() {
     const tenant = String(elements.ctxTenant.value || "").trim();
     const context = { roles };
     if (tenant) context.tenant = tenant;
-    viewer.log("info", `POST router call function="${toolName}" args=${JSON.stringify(args)} ctx=${JSON.stringify(context)}`);
+    viewer.log(
+      "info",
+      `POST router call url="${readBaseUrlInput(elements.routerBase)}/call" function="${toolName}" args=${JSON.stringify(args)} ctx=${JSON.stringify(context)}`,
+    );
 
     setBusy(true);
 

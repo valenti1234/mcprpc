@@ -13,9 +13,10 @@ fi
 python -m pip install -U pip >/dev/null
 pip install -e ".[test]" >/dev/null
 
-HOST="${HOST:-0.0.0.0}"
+HOST="${HOST:-127.0.0.1}"
 PORT="${PORT:-7010}"
-export REGISTRY_URL="${REGISTRY_URL:-http://localhost:7000}"
+export REGISTRY_URL="${REGISTRY_URL:-http://127.0.0.1:7000}"
 export MCPRPC_STDIO_PERSISTENT="${MCPRPC_STDIO_PERSISTENT:-1}"
+export MCPRPC_CORS_ORIGINS="${MCPRPC_CORS_ORIGINS:-http://127.0.0.1:8386,http://localhost:8386}"
 
 exec uvicorn app.main:app --reload --host "$HOST" --port "$PORT"

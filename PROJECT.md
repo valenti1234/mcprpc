@@ -13,6 +13,7 @@ The repo is a monorepo with these primary projects:
 
 - `mc-automesh/` — Python AutoMesh (discover + publish + serve MCP tools)
 - `mc-node-automesh/` — Node.js/TypeScript AutoMesh (discover + publish + serve MCP tools)
+- `mc-java-automesh/` — Java 21 AutoMesh (discover + publish + serve MCP tools over `stdio`, `sse`, `streamable-http`)
 - `mr-registry/` — Function registry service (FastAPI + SQLite via SQLModel)
 - `mr-router/` — Router service (FastAPI) that resolves and calls tools via MCP
 - `mc-gui/` — Web UI + proxy (FastAPI + static assets)
@@ -104,6 +105,39 @@ Notable files:
 - `mc-node-automesh/src/registry-client.ts` — HTTP client for `/register` and `/heartbeat`
 - `mc-node-automesh/src/mcp-server.ts` — MCP server wrapper around the official SDK
 - `mc-node-automesh/src/cli.ts` — CLI
+
+### mc-java-automesh (Java 21 AutoMesh)
+
+Purpose: discover Java methods, register them in the registry, and expose them as MCP tools over `stdio` or HTTP transports.
+
+Key capabilities:
+
+- Reflection-based discovery:
+  - instance method discovery via `publishInstance(...)`
+  - static method discovery via `publishClass(...)`
+  - package scanning via `publishPackage(...)`
+- Metadata extraction:
+  - default tool naming uses `<lowerCamelClassName>.<methodName>`
+  - optional overrides via `@Expose`
+  - `@Ignore` excludes methods from discovery
+- Input JSON Schema generation from Java reflection metadata
+- Built-in tools:
+  - `system.health`
+  - `system.heartbeat`
+- Transport:
+  - `stdio`
+  - `sse`
+  - `streamable-http`
+
+Notable files:
+
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/AutoMesh.java` — main AutoMesh implementation
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/McpStdioServer.java` — minimal MCP stdio server
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/HttpMcpServer.java` — minimal MCP HTTP server for `sse` and `streamable-http`
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/MetadataExtractor.java` — metadata extraction
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/SchemaUtils.java` — JSON Schema generation
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/RegistryClient.java` — registry `/register` and `/heartbeat` client
+- `mc-java-automesh/src/main/java/io/mcprpc/automesh/AutoMeshCli.java` — CLI entrypoint
 
 Note: `mc-node-automesh/mc-node-automesh/` looks like a duplicated nested copy (it contains its own `package.json`, `src/`, `tests/`, and `node_modules/`). It does not appear to be required for the main package.
 
@@ -206,7 +240,7 @@ Notable files:
 
 ### Router (mr-router)
 
-- `REGISTRY_URL` (default: `http://localhost:7000`)
+- `REGISTRY_URL` (default: `http://127.0.0.1:7000`)
 - `REGISTRY_TIMEOUT_S`, `ROUTER_TIMEOUT_S`
 - Retry: `ROUTER_RETRY_ATTEMPTS`, `ROUTER_RETRY_BASE_DELAY_S`, `ROUTER_RETRY_MAX_DELAY_S`
 - Circuit breaker: `ROUTER_CB_FAILURE_THRESHOLD`, `ROUTER_CB_RECOVERY_TIMEOUT_S`, `ROUTER_CB_HALF_OPEN_SUCCESSES`
@@ -246,4 +280,3 @@ This repo includes run scripts:
 - `mr-router/run.sh`
 - `mc-gui/run-mc-gui.sh`
 - `mc-automesh/example/run-example.sh`
-

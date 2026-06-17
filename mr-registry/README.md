@@ -70,7 +70,7 @@ uvicorn app.main:app --reload --port 7000
 You can register a function using a simple `curl` request:
 
 ```bash
-curl -X POST http://localhost:7000/register \
+curl -X POST http://127.0.0.1:7000/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "math.sum",
@@ -96,7 +96,7 @@ curl -X POST http://localhost:7000/register \
 To resolve a function and get its connection details:
 
 ```bash
-curl -X POST http://localhost:7000/resolve \
+curl -X POST http://127.0.0.1:7000/resolve \
   -H "Content-Type: application/json" \
   -d '{
     "name": "math.sum",
@@ -142,7 +142,7 @@ While an HTTP-based service might register as:
   "name": "billing.calculate_vat",
   "transport": "mcp",
   "mcp_transport": "streamable-http",
-  "endpoint": "http://localhost:7002/mcp"
+  "endpoint": "http://127.0.0.1:7002/mcp"
 }
 ```
 
@@ -152,5 +152,5 @@ Entry point in `app/main.py`:
 
 ```bash
 python app/main.py run --port 7000
-python app/main.py health --url http://localhost:7000
+python app/main.py health --url http://127.0.0.1:7000
 ```

@@ -8,6 +8,7 @@ This repository contains:
 - `mr-router`: MCP router service (HTTP) that resolves tools via the registry and invokes MCP endpoints
 - `mc-automesh`: Python AutoMesh (publish Python functions as MCP tools + register them)
 - `mc-node-automesh`: Node.js/TypeScript AutoMesh (publish Node functions as MCP tools + register them)
+- `mc-java-automesh`: Java 21 AutoMesh (publish Java methods as MCP tools + register them)
 - `mc-gui`: Web UI that proxies registry/router APIs
 - `mr-html`: pure-frontend demo UI (no backend code) that talks to registry + router directly
 
@@ -20,14 +21,22 @@ cd mr-registry
 ./run.sh
 ```
 
-2. Start the router (defaults to port 7010, registry at `http://localhost:7000`):
+2. Start the router (defaults to port 7010, registry at `http://127.0.0.1:7000`):
 
 ```bash
 cd mr-router
 ./run.sh
 ```
 
-3. Start the pure frontend UI:
+3. (Optional) Start a Java worker (SSE) and publish tools:
+
+```bash
+cd mc-java-automesh
+export REGISTRY_URL=http://127.0.0.1:7000
+./run-example.sh
+```
+
+4. Start the pure frontend UI:
 
 ```bash
 cd mr-html
@@ -37,6 +46,11 @@ cd mr-html
 Open:
 
 - `mr-html`: http://127.0.0.1:8386/
+
+In `mr-html`, set:
+
+- Registry URL: `http://127.0.0.1:7000`
+- Router URL: `http://127.0.0.1:7010`
 
 ## Publishing
 
@@ -56,3 +70,7 @@ See [PUBLISHING.md](./PUBLISHING.md) for release commands.
 ## License
 
 MIT. See [LICENSE](./LICENSE).
+
+## History
+
+See [HISTORY.md](./HISTORY.md).

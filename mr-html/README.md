@@ -17,8 +17,8 @@ Open:
 
 Set these fields in the header:
 
-- **Registry URL** (example: `http://localhost:7000`) used for tool discovery via `GET /functions`
-- **Router URL** (example: `http://localhost:7010`) used for invocation via `POST /call`
+- **Registry URL** (example: `http://127.0.0.1:7000`) used for tool discovery via `GET /functions`
+- **Router URL** (example: `http://127.0.0.1:7010`) used for invocation via `POST /call`
 
 ## Troubleshooting
 
@@ -38,3 +38,9 @@ sudo ss -ltnp '( sport = :8386 )'
 ```
 
 Cross-origin note: if the registry/router are on different ports than this static server, they must enable CORS for browser requests.
+
+Common causes of `Failed to fetch`:
+
+- `mr-router` is not running on `http://127.0.0.1:7010`
+- Hostname mismatch (`localhost` vs `127.0.0.1`) between the page origin and API URLs
+- CORS not enabled on `mr-router` for the UI origin

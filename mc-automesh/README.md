@@ -37,7 +37,7 @@ from mc_automesh import AutoMesh
 
 mesh = AutoMesh(
     service_name="billing-service",
-    registry_url="http://localhost:7000",
+    registry_url="http://127.0.0.1:7000",
     runtime="python",
     mcp_transport="stdio",
 )
@@ -51,7 +51,7 @@ This will:
 - Import `billing`
 - Discover eligible functions
 - Generate JSON Schema for each tool’s inputs from type hints
-- Publish each tool to the registry at `http://localhost:7000/register`
+- Publish each tool to the registry at `http://127.0.0.1:7000/register`
 - Start an MCP server over stdio exposing each tool under the same name that was published
 
 ## How It Works
@@ -282,8 +282,8 @@ The test suite covers:
 Minimal CLI via module runner:
 
 ```bash
-python -m mc_automesh publish-path --service-name billing-service --registry-url http://localhost:7000 --path ./myapp/services
-python -m mc_automesh publish-module --service-name billing-service --registry-url http://localhost:7000 --module myapp.services.billing
-python -m mc_automesh serve --service-name billing-service --registry-url http://localhost:7000
-python -m mc_automesh run --service-name billing-service --registry-url http://localhost:7000 --path ./myapp/services
+python -m mc_automesh publish-path --service-name billing-service --registry-url http://127.0.0.1:7000 --path ./myapp/services
+python -m mc_automesh publish-module --service-name billing-service --registry-url http://127.0.0.1:7000 --module myapp.services.billing
+python -m mc_automesh serve --service-name billing-service --registry-url http://127.0.0.1:7000
+python -m mc_automesh run --service-name billing-service --registry-url http://127.0.0.1:7000 --path ./myapp/services
 ```

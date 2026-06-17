@@ -1,0 +1,14 @@
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/AutoMesh.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/AutoMeshCli.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/HttpMcpServer.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/McpStdioServer.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/MetadataExtractor.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/RegistryClient.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/SchemaUtils.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/ToolMetadata.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/ToolRegistration.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/annotations/Expose.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/annotations/Ignore.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/annotations/InputMode.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/examples/BillingApi.java
+/home/valenti/mcprpc/mc-java-automesh/src/main/java/io/mcprpc/automesh/examples/BillingApiExampleMain.java

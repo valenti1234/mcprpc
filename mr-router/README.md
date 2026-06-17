@@ -47,7 +47,7 @@ Here is how you can test the `mcprpc-router` locally with a registry and a dummy
 
 ### 1. Start the Registry
 
-Assuming you have a registry running locally on `http://localhost:7000`:
+Assuming you have a registry running locally on `http://127.0.0.1:7000`:
 *(Check your registry project instructions to start it)*
 
 ### 2. Register `math.sum` stdio worker
@@ -55,7 +55,7 @@ Assuming you have a registry running locally on `http://localhost:7000`:
 You can register the function in the registry with a curl command:
 
 ```bash
-curl -X POST http://localhost:7000/register \
+curl -X POST http://127.0.0.1:7000/register \
   -H "Content-Type: application/json" \
   -d '{
     "name": "math.sum",
@@ -78,7 +78,8 @@ curl -X POST http://localhost:7000/register \
 Start the router locally on port 7010:
 
 ```bash
-REGISTRY_URL="http://localhost:7000" uvicorn app.main:app --port 7010 --reload
+cd mr-router
+./run.sh
 ```
 
 ### 4. POST `/call` `math.sum`
@@ -86,7 +87,7 @@ REGISTRY_URL="http://localhost:7000" uvicorn app.main:app --port 7010 --reload
 Call the router using the following `curl` command:
 
 ```bash
-curl -X POST http://localhost:7010/call \
+curl -X POST http://127.0.0.1:7010/call \
   -H "Content-Type: application/json" \
   -d '{
     "function": "math.sum",
@@ -130,7 +131,7 @@ curl -X POST http://localhost:7010/call \
 ## Resilience Configuration (env)
 
 - Registry:
-  - `REGISTRY_URL` (default `http://localhost:8000`)
+  - `REGISTRY_URL` (default `http://127.0.0.1:7000`)
   - `REGISTRY_TIMEOUT_S` (default `5.0`)
 - Router (timeouts):
   - `ROUTER_TIMEOUT_S` (default `15.0`)
@@ -161,5 +162,5 @@ Entry point in `app/main.py`:
 
 ```bash
 python app/main.py run --port 7010
-python app/main.py health --url http://localhost:7010
+python app/main.py health --url http://127.0.0.1:7010
 ```

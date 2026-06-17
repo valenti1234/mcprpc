@@ -4,8 +4,8 @@ Web UI for the mcprpc registry and router.
 
 This service is a small FastAPI app that serves a static frontend and proxies:
 
-- Registry API (default: `http://localhost:7000`)
-- Router API (default: `http://localhost:7010`)
+- Registry API (default: `http://127.0.0.1:7000`)
+- Router API (default: `http://127.0.0.1:7010`)
 
 ## Run
 
@@ -16,12 +16,11 @@ cd mc-gui
 
 Open:
 
-- http://localhost:8002/
+- http://127.0.0.1:8002/
 
 ## Configuration
 
 Environment variables:
 
-- `REGISTRY_URL` (default: `http://localhost:7000`)
-- `ROUTER_URL` (default: `http://localhost:7010`)
-
+- `REGISTRY_URL` (default: `http://127.0.0.1:7000`)
+- `ROUTER_URL` (default: `http://127.0.0.1:7010`)
